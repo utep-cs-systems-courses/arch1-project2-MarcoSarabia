@@ -1,0 +1,86 @@
+//Alternate LEDs from Off, Green, and Red
+#include <msp430.h>
+#include "libTimer.h"
+#include "led.h"
+
+int main(void) {
+  P1DIR |= LEDS; //Sets P1DIR to Output 
+  P1OUT &= ~LED_GREEN; //Turns off Green LED
+  P1OUT |= LED_RED; //Turns On Red LED
+
+  configureClocks();		/* setup master oscillator, CPU & peripheral clocks */
+  enableWDTInterrupts();	/* enable periodic interrupt */
+  
+  or_sr(0x18);			/* CPU off, GIE on */
+}
+// global state var to count time
+
+//int secondCount = 0;
+char led_state = 0;
+
+void __interrupt_vec(WDT_VECTOR) WDT()/* 250 interrupts/sec */{
+  /*
+  secondCount ++;
+
+  if (secondCount >= 250) { /* once each sec... 
+
+    secondCount = 0;/* reset count 
+
+    P1OUT ^= LED_GREEN;/* toggle green LED 
+    */
+
+  updateSecond();
+  updateDim();
+  updateLed();
+  }
+}
+
+void updatesecond(){
+  static usigned char tikCount = 0;
+
+  tikCount++;
+  if (tikCount == 260){
+    tikCount = 0;
+  }
+  if(tikCount ==0){
+    oncePerSecond();
+  }
+}
+
+char green_on = 0;
+
+void oncePerSecond(){
+  green_on = !green_on;
+}
+
+char dim_green_on = 0;
+
+void updateDim(){
+  switch (led_state) {
+    
+  case 3:
+    dim_green_on = 0;
+    led_state = 0;
+    break;
+
+  case 0:  case1:
+    dim_green_on = 0;
+    led_state ++;
+    break;
+
+  case 2:
+
+    dim_green_on = 1;
+    led_state = 3;
+    break;
+  }
+}
+
+void update_led(){
+  if(green_on && dim_green_on){
+    P1OUT |= 64;
+  }
+  else{
+    P1OUT &= ~64;
+  }
+}
