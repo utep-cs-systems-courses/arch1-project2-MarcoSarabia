@@ -1,15 +1,8 @@
 #include <msp430.h>
 #include "libTimer.h"
-
-#define LED_RED BIT0               // P1.0
-#define LED_GREEN BIT6             // P1.6
-#define LEDS (BIT0 | BIT6)
-
-#define SW1 BIT0		// switch1 is p2.0
-#define SW2 BIT1                // switch2 is p2.1
-#define SW3 BIT2                // switch3 is p2.2
-#define SW4 BIT3                // switch4 is p2.3
-#define SWITCHES (SW1 | SW2 | SW3 | SW4) // 4 switches on this board
+#include "led.h"
+#include "switches.h"
+#include "stateMachines.h"
 
 void led_init(){
   P1DIR |= LEDS;                // Sets P1DIR to output
@@ -45,20 +38,21 @@ void switch_interrupt_handler(){
 
 /* Checks if any button is pressed down */
   if (~p2val & SW1) {
-    P1OUT |= LED_RED;
-    P1OUT &= ~LED_GREEN;
+    currentStateMachine = 1;
+    P1OUT &= ~LEDS;
+    enableWDTInterrupts();
   }
   if(~p2val & SW2) {
-    P1OUT |= LED_GREEN;
-    P1OUT &= ~LED_RED;
+    currentStateMachine = 2;
+    enableWDTInterrupts();
   }
   if(~p2val & SW3) {
-    P1OUT |= LED_RED;
-    P1OUT |= LED_GREEN;
+    currentStateMachine = 3;
+    enableWDTInterrupts();
   }
   if(~p2val & SW4){
-    P1OUT &= ~LED_RED;
-    P1OUT &= ~LED_GREEN;
+    currentStateMachine = 4;
+    enableWDTInterrupts();
   }
 }
 

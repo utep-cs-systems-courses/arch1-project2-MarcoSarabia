@@ -1,6 +1,6 @@
 # makfile configuration
 
-COMMON_OBJECTS  = 
+COMMON_OBJECTS  = main.o  # Wdinterrupthandler.o
 
 CPU             = msp430g2553
 
@@ -24,9 +24,9 @@ all: led.elf
 
 #additional rules for files
 
-led.elf: ${COMMON_OBJECTS} main.o stateMachines.o ../lib/libTimer.a
+led.elf: ${COMMON_OBJECTS}
 
-	${CC} ${CFLAGS} ${LDFLAGS} -o $@ $^ 
+	${CC} ${CFLAGS} ${LDFLAGS} -o $@ $^ ../lib/libTimer.a
 
 
 
@@ -42,3 +42,8 @@ clean:
 
 
 
+main.o: led.h
+
+
+
+wdInterruptHandler.o:  led.h
