@@ -24,7 +24,7 @@ all: led.elf
 
 #additional rules for files
 
-led.elf: ${COMMON_OBJECTS} main.o stateMachines.o ../lib/libTimer.a
+led.elf: ${COMMON_OBJECTS} main.o stateMachines.o led.o switches.o buzzer.o ../lib/libTimer.a
 
 	${CC} ${CFLAGS} ${LDFLAGS} -o $@ $^ 
 
