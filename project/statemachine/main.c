@@ -14,17 +14,10 @@ void main(void){
   
   switch_init();                // Initialize Switches
 
-  buzzer_init();
+  buzzer_init();                // Initialize Buzzer
   
   enableWDTInterrupts();        // Enable WatchDog Timer
 
-  or_sr(0x18);            // CPU off, GIE on
+  or_sr(0x18);                  // CPU off, GIE on
 } 
 
-/* Switch on P2 (S2) */
-void __interrupt_vec(PORT2_VECTOR) Port_2(){
-  if (P2IFG & SWITCHES) {	      /* did a button cause this interrupt? */
-    P2IFG &= ~SWITCHES;		      /* clear pending sw interrupts */
-    switch_interrupt_handler();	/* single handler for all switches */
-  }
-}
