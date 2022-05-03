@@ -129,6 +129,54 @@ void increasingBuzzer(){
   }
 }
 
+void musicalBuzzer(){
+  static int interruptCount = 0;
+  static int currentState = 0;
+
+  interruptCount++;
+  
+  if(interruptCount >= 250){
+    interruptCount = 0;
+
+
+    switch(currentState){
+
+  case 0:
+    buzzer_set_period(1000);
+    break;
+    
+  case 1:
+    buzzer_set_period(3000);
+    break;
+    
+  case 2:
+    buzzer_set_period(2000);
+    break;
+    
+  case 3:
+    buzzer_set_period(4000);
+    break;
+    
+  case 4:
+    buzzer_set_period(3000);
+    break;
+    
+  case 5:
+    buzzer_set_period(5000);
+    break;
+    
+  }
+
+    currentState++;
+
+    if(currentState > 5){
+      currentState = 0;
+    }
+    
+  }
+  
+}
+
 void __interrupt_vec(WDT_VECTOR) WDT(){ /* 250 interrupts/sec */
 
   switch(currentStateMachine){
@@ -150,7 +198,8 @@ void __interrupt_vec(WDT_VECTOR) WDT(){ /* 250 interrupts/sec */
   case 3:
     ledsControl(0);
     combinedStateMachine();
-    
+
+    musicalBuzzer();
     break;
 
   case 4:
